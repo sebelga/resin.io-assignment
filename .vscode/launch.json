@@ -10,6 +10,7 @@
       "name": "Start server",
       "runtimeExecutable": "nodemon",
       "program": "${workspaceFolder}/server/src/server.js",
+      "args": ["--watch", "server"],
       "restart": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"

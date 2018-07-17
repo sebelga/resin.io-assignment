@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/sebelga/resin.io-assignment#readme",
   "dependencies": {
+    "dotenv": "^6.0.0",
+    "uuid": "^3.3.2",
     "winston": "3.0.0",
     "ws": "5.2.2"
   }
