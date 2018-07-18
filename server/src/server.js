@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-logger.info('Initializing WebSocket Server...');
+logger.info(`Starting WebSocket Server on port ${config.webSocketsServerPort}...`);
 const wss = new WebSocket.Server({ port: config.webSocketsServerPort, server });
 
 /**
@@ -91,8 +91,8 @@ setInterval(function ping() {
   });
 }, Number(config.heartBeatInterval));
 
-logger.info('Starting Server...');
+logger.info(`Starting Server at ${config.serverHost}:${config.serverPort}...`);
 
-server.listen(config.serverPort, '127.0.0.1', () => {
+server.listen(config.serverPort, config.serverHost, () => {
   logger.info('Server started.');
 });
