@@ -8,7 +8,7 @@ const logger = require('./logger');
 const fleetManager = require('./fleet-manager');
 const { authenticate } = require('./auth');
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   /**
    * Add "/status" route to be able to know at any moment
    * the position of all drones
@@ -19,7 +19,8 @@ const server = http.createServer((req, res) => {
       'Access-Control-Allow-Origin': '*',
     });
 
-    res.end(JSON.stringify(fleetManager.getDronesPosition()));
+    const dronesStatus = await fleetManager.getDronesStatus();
+    res.end(JSON.stringify(dronesStatus));
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Page Not found.');

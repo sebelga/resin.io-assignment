@@ -7,13 +7,10 @@
 const { broadcastUpdateInterval } = require('./config');
 const { getDistanceBetweenPoints } = require('./utils');
 
+const db = require('./db');
+
 class FleetManager {
   constructor() {
-    /**
-     * Keep a hash table of all the drones connected
-     */
-    this.drones = {};
-
     /**
      * Keep a reference of all the ws connection
      * where to broadcast updates
@@ -37,22 +34,25 @@ class FleetManager {
     this.updateListeners.delete(ws);
   }
 
-  updateDronePosition(id, newPos) {
-    const speed = this.calculateSpeedDrone(id, newPos);
+  async updateDronePosition(id, newPos) {
+    const speed = await this.calculateDroneSpeed(id, newPos);
     const data = {
       pos: newPos,
       speed,
     };
 
-    this.drones[id] = { ...data, updatedOn: Date.now() };
     this.queue[id] = data;
-    // console.log(`Drone ${id} position update: ${JSON.stringify(data)}`);
+
+    await db.updateDrone(id, { ...data, updatedOn: Date.now() });
   }
 
-  getDronesPosition() {
-    return this.drones;
+  async getDronesStatus() {
+    return await db.getDrones();
   }
 
+  /**
+   * Broadcast drones update to all ws client registered
+   */
   broadcastUpdates() {
     if (Object.keys(this.queue).length) {
       this.updateListeners.forEach((_, ws) => {
@@ -62,13 +62,14 @@ class FleetManager {
     }
   }
 
-  calculateSpeedDrone(id, newPos) {
-    if (!this.drones[id]) {
+  async calculateDroneSpeed(id, newPos) {
+    const drone = await db.getDroneById(id);
+    if (!drone) {
       return 0;
     }
-    const { pos: oldPos, updatedOn } = this.drones[id];
+    const { pos: oldPos, updatedOn } = drone;
     const distance = getDistanceBetweenPoints(oldPos, newPos) * 1000;
-    const timeElapsed = (Date.now() - updatedOn) / 1000; // time in second elapsed since last
+    const timeElapsed = (Date.now() - updatedOn) / 1000; // time in second elapsed since last update
     return distance / timeElapsed;
   }
 }
