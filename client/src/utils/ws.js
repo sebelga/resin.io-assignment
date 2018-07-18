@@ -2,15 +2,6 @@ const RETRY_TIMEOUT = 1000;
 
 class WsConnection {
   constructor() {
-    /**
-     * As all modern borwser send the domain cookies along with the connection
-     * we add a Header to identify websocket connections from our WebApp
-     *
-     * For the moment we are just sending the clienID to fake authorization
-     */
-    const authToken = process.env.REACT_APP_WS_CLIENT_ID;
-    document.cookie = 'X-Authorization=' + authToken + '; path=/';
-
     this.listeners = [];
     this.connect();
   }

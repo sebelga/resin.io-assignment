@@ -1,0 +1,18 @@
+version: '3'
+services:
+  server:
+    build: ./server
+    ports:
+      - "5000:5000"
+      - "8080:8080"
+    env_file:
+      - server/.env
+    environment:
+      - SERVER_HOST=0.0.0.0
+    command: bash -c "npm start"
+
+  client:
+    build: ./client
+    ports:
+      - "4007:4007"
+    command: bash -c "serve build -p 4007"
