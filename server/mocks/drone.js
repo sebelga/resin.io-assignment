@@ -64,7 +64,7 @@ class Drone {
       }
     }
 
-    return this.currentPos;
+    return `${this.currentPos.lat}:${this.currentPos.lng}`;
   }
 
   getStatus() {

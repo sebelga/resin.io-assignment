@@ -67,8 +67,7 @@ wss.on('connection', function connection(ws, req) {
       return;
     }
 
-    const data = JSON.parse(message);
-    fleetManager.updateDronePosition(id, data);
+    fleetManager.updateDronePosition(id, JSON.parse(message));
   });
 
   ws.on('close', function close() {

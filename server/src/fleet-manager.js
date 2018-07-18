@@ -40,7 +40,9 @@ class FleetManager {
     this.updateListeners.delete(ws);
   }
 
-  async updateDronePosition(id, newPos) {
+  async updateDronePosition(id, message) {
+    const parsed = message.split(':');
+    const newPos = { lat: parseFloat(parsed[0]), lng: parseFloat(parsed[1]) };
     const updatedOn = Date.now();
     const drone = await db.getDroneById(id);
     const speed = this.getDroneSpeed(drone, newPos);
