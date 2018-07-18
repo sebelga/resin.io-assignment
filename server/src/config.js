@@ -16,4 +16,5 @@ module.exports = {
   serverPort: process.env.SERVER_PORT || 3000,
   heartBeatInterval: process.env.HEARTBEAT_INTERVAL || 30000,
   broadcastUpdateInterval: process.env.BROADCAST_UPDATE_INTERVAL || 1000,
+  inactiveDroneInterval: process.env.INACTIVE_DRONE_INTERVAL || 10000,
 };

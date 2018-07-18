@@ -1,5 +1,16 @@
 .c-drones-list {
   &__table {
     width: 100%;
+
+    tr th:nth-child(3),
+    tr td:nth-child(3) {
+      text-align: center;
+    }
+  }
+
+  &-item--stopped {
+    td {
+      background-color: yellow;
+    }
   }
 }

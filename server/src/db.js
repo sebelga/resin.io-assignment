@@ -12,7 +12,7 @@ const getDrones = () => {
 const getDroneById = id => Promise.resolve(drones[id]);
 
 const updateDrone = (id, data) => {
-  drones[id] = data;
+  drones[id] = { ...drones[id], ...data };
   return Promise.resolve({ id, ...data });
 };
 
