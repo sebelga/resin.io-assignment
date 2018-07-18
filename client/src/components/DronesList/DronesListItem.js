@@ -5,7 +5,7 @@ export default ({ drone }) => {
     <tr>
       <td>{drone.id}</td>
       <td>
-        Lat: {drone.position.lat}, Long: {drone.position.lng}
+        Lat: {drone.pos.lat}, Long: {drone.pos.lng}
       </td>
       <td>{drone.speed}</td>
     </tr>

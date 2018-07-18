@@ -26,7 +26,7 @@ export default class DronesFleet extends PureComponent {
        * We merge drones update that we already have
        * on top of the complete fleet data loaded
        */
-      allDrones = Object.keys(allDrones).map(k => ({ id: k, position: allDrones[k] }));
+      allDrones = Object.keys(allDrones).map(k => ({ id: k, pos: allDrones[k].pos, speed: allDrones[k].speed }));
       const drones = Object.assign({}, allDrones, prevState.drones);
       return { drones };
     });
@@ -40,7 +40,7 @@ export default class DronesFleet extends PureComponent {
         this.loadInitialData();
       }
       const drones = payload || {};
-      this.setState({ drones: Object.keys(drones).map(k => ({ id: k, position: drones[k] })) });
+      this.setState({ drones: Object.keys(drones).map(k => ({ id: k, pos: drones[k].pos, speed: drones[k].speed })) });
     }
   }
 
