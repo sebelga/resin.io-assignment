@@ -2,7 +2,7 @@
 
 const Drone = require('./drone');
 
-const TOTAL_DRONES = 10;
+const TOTAL_DRONES = 30;
 
 let fleet = [];
 

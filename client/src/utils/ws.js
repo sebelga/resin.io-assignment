@@ -17,7 +17,7 @@ class WsConnection {
 
   connect = () => {
     if (!this.ws) {
-      this.ws = new WebSocket(process.env.REACT_APP_WSS_HOST);
+      this.ws = new WebSocket(process.env.REACT_APP_WSS_HOST, process.env.REACT_APP_WS_CLIENT_ID);
       this.ws.onopen = this.onWSopen;
       this.ws.onerror = this.onWSClose;
       this.ws.onclose = this.onWSClose;

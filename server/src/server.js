@@ -10,13 +10,15 @@ const { authenticate } = require('./auth');
 
 const server = http.createServer((req, res) => {
   /**
-   * Add /status route to retrieve the position of All drones
+   * Add "/status" route to be able to know at any moment
+   * the position of all drones
    */
   if (req.url === '/status') {
     res.writeHead(200, {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
     });
+
     res.end(JSON.stringify(fleetManager.getDronesPosition()));
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -50,6 +52,7 @@ wss.on('connection', function connection(ws, req) {
   ws.on('pong', heartbeat);
 
   ws.auth = authenticate(req);
+
   if (ws.auth.role === 'WebAppClient') {
     fleetManager.addUpdateListener(ws);
   }
@@ -74,6 +77,7 @@ wss.on('connection', function connection(ws, req) {
 
 /**
  * Detect broken connections by sendig a ping every 30 seconds
+ * to each client
  */
 setInterval(function ping() {
   wss.clients.forEach(function each(ws) {

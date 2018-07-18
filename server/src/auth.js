@@ -9,20 +9,11 @@ const config = require('./config');
  * @param {*} req WebSocket request
  */
 const authenticate = req => {
-  const { cookie } = req.headers;
-  if (cookie) {
-    const id = cookie.split('=')[1];
-    if (id === config.dashboardClientID) {
-      return {
-        id,
-        role: 'WebAppClient',
-      };
-    }
-  }
-
   const id = req.headers['sec-websocket-protocol'];
+  const role = id === config.dashboardClientID ? 'WebAppClient' : 'Drone';
   return {
     id,
+    role,
   };
 };
 
