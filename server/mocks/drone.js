@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Drone instance to simulate real moving clients around
+ * a Country
+ */
+
 const uuid = require('uuid/v4');
 const WebSocket = require('ws');
 

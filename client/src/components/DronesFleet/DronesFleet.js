@@ -11,12 +11,13 @@ export default class DronesFleet extends PureComponent {
     };
     this.onWSmessage = this.onWSmessage.bind(this);
     ws.addListener(this.onWSmessage);
+
     if (ws.connected) {
-      this.loadInitialData();
+      this.loadStatusDrones();
     }
   }
 
-  async loadInitialData() {
+  async loadStatusDrones() {
     const url = `${process.env.REACT_APP_API_HOST}/status`;
     const res = await fetch(url);
     let allDrones = await res.json();
@@ -26,28 +27,36 @@ export default class DronesFleet extends PureComponent {
        * We merge drones update that we already have
        * on top of the complete fleet data loaded
        */
-      allDrones = Object.keys(allDrones).map(k => ({ id: k, pos: allDrones[k].pos, speed: allDrones[k].speed }));
-      const drones = Object.assign({}, allDrones, prevState.drones);
+      const drones = { ...allDrones, ...prevState.drones };
       return { drones };
     });
   }
 
   onWSmessage({ type, payload } = {}) {
     if (type === 'DRONES_UPDATE') {
-      // If we don't have yet any drones loaded, we call the API
-      // with the data of *all* the drones
+      // If we don't have any drones data in our state it means that
+      // this is the first "update" we receive from the server.
+      // As the update only contains information about moving drones, we
+      // will ask the server for the status of all drones
       if (!Object.keys(this.state.drones).length) {
-        this.loadInitialData();
+        this.loadStatusDrones();
       }
-      const drones = payload || {};
-      this.setState({ drones: Object.keys(drones).map(k => ({ id: k, pos: drones[k].pos, speed: drones[k].speed })) });
+
+      this.setState(prevState => {
+        const drones = { ...prevState.drones, ...payload };
+        return { drones };
+      });
     }
   }
 
   render() {
+    // Convert hash map to Array
+    const listDrones = Object.keys(this.state.drones).map(k => ({ id: k, ...this.state.drones[k] }));
+
+    // Add the "drones" prop to all children
     const children = React.Children.map(this.props.children, child =>
       React.cloneElement(child, {
-        drones: this.state.drones,
+        drones: listDrones,
       })
     );
 
