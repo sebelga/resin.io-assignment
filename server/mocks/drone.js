@@ -21,6 +21,7 @@ class Drone {
   constructor() {
     this.id = uuid();
     this.connectToServer();
+    this.status = '__flying__';
   }
 
   connectToServer() {
@@ -57,10 +58,28 @@ class Drone {
       // at a random distance from the center of the country
       this.currentPos = getRandomPosFromPoint(GEO_COUNTRY, 3000, 100000);
     } else {
-      this.currentPos = getRandomPosFromPoint(this.currentPos);
+      this.status = this.getStatus();
+      if (this.status === '__flying__') {
+        this.currentPos = getRandomPosFromPoint(this.currentPos);
+      }
     }
 
     return this.currentPos;
+  }
+
+  getStatus() {
+    let status = this.status;
+    if (this.status === '__flying__') {
+      // We simulate randomly a Drone that stops flying
+      const rand = getRandomInt(1, 50);
+      if (rand === 7) {
+        status = '__stopped__';
+        this.timeStoppedFlying = Date.now();
+      }
+    } else if (status === '__stopped__' && this.timeStoppedFlying && Date.now() - this.timeStoppedFlying > 12000) {
+      status = '__flying__';
+    }
+    return status;
   }
 }
 

@@ -7,7 +7,7 @@ export default ({ drone }) => {
       <td>
         Lat: {drone.pos.lat}, Long: {drone.pos.lng}
       </td>
-      <td>{drone.speed}</td>
+      <td style={{ textAlign: 'center' }}>{Math.round(drone.speed)}</td>
     </tr>
   );
 };
