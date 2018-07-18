@@ -2,7 +2,7 @@
 
 /**
  * The FleetManager is in charge of keeping the position of all the drones
- * and broadcast the position update to the listeners (currently our WebApp)
+ * and broadcast their position updates to the listeners (currently our WebApp dashboard)
  */
 const { broadcastUpdateInterval, inactiveDroneInterval } = require('./config');
 const { getDistanceBetweenPoints } = require('./utils');
@@ -59,8 +59,16 @@ class FleetManager {
       status,
     };
 
+    /**
+     * As the drones update occur several times per seconds
+     * we keep the update in a queue and send them by batch
+     * at certain intervals.
+     */
     this.queue[id] = data;
 
+    /**
+     * Save the drone data to our db
+     */
     await db.updateDrone(id, { ...data, updatedOn, lastMoveOn });
   }
 
@@ -69,7 +77,7 @@ class FleetManager {
   }
 
   /**
-   * Broadcast drones update to all registered ws clients
+   * Broadcast drone update queued to all registered ws clients
    */
   broadcastUpdates() {
     if (Object.keys(this.queue).length) {
@@ -81,7 +89,7 @@ class FleetManager {
   }
 
   /**
-   * Check periodically if there are any innactive drones
+   * Check periodically if there are any innactive drones (that have stopped flying)
    */
   async checkInactiveDrones() {
     const drones = await db.getDrones();

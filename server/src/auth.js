@@ -4,7 +4,7 @@ const config = require('./config');
 
 /**
  * Authenticate the WebSocket request to determine if
- * it is our WebApp client
+ * it is our WebApp client or a drone
  *
  * @param {*} req WebSocket request
  */

@@ -11,7 +11,7 @@ class App extends Component {
           <h1 className="App-title">BlueInc drones fleet</h1>
         </header>
 
-        <div className="page-content">
+        <div className="App-content">
           <DroneFleet>
             <DronesList />
           </DroneFleet>

@@ -1,7 +1,7 @@
 'use-strict';
 
 /**
- * Fake DB for drones
+ * Fake DB for our Drone entity
  */
 const drones = {};
 

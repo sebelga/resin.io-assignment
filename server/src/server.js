@@ -43,7 +43,13 @@ function heartbeat() {
 }
 
 function onCloseWS(ws) {
+  logger.info(`Lost ws connection: ${ws.auth.id} : ${ws.auth.role}`);
+
   if (ws.auth.role === 'WebAppClient') {
+    /**
+     * Remove the ws client from the listeners
+     * of drones position updates
+     */
     fleetManager.removeUpdateListener(ws);
   }
 }
@@ -54,19 +60,22 @@ wss.on('connection', function connection(ws, req) {
 
   ws.auth = authenticate(req);
 
+  logger.info(`New ws connection: ${ws.auth.id} : ${ws.auth.role}`);
+
   if (ws.auth.role === 'WebAppClient') {
+    /**
+     * Add a ws client to the listeners to brodacast
+     * the drones position updates
+     */
     fleetManager.addUpdateListener(ws);
   }
 
   ws.on('message', function incoming(message) {
-    if (!this.auth) {
-      return;
-    }
-    const { id } = this.auth;
-    if (!id) {
+    if (!this.auth || !this.auth.id) {
       return;
     }
 
+    const { id } = this.auth;
     fleetManager.updateDronePosition(id, JSON.parse(message));
   });
 
